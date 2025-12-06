@@ -1,3 +1,12 @@
+const fs = require("fs");
+const path = require("path");
+
+// ensure data dir and files exist
+const dir = path.join(__dirname, "../data");
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
 const Datastore = require('gray-nedb');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -48,16 +57,17 @@ class userDAO {
     }
 
 
-    create(newUser) {
+    create(newUser, callback) {
         const that = this;
         let entry = newUser
 
-        that.db.insert(entry, (err) => {
+        that.db.insert(entry, (err, insertedUser) => {
             if (err) {
                 console.log("Can't insert user: ", newUser.username);
             }
-        });
 
+            callback(null, insertedUser);
+        });
     }
 
 
