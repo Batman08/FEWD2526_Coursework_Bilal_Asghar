@@ -1,3 +1,15 @@
+const fs = require("fs");
+const path = require("path");
+
+// ensure data dir and files exist
+const dataDir = path.join(__dirname, "../data");
+const usersDBPath = path.join(dataDir, "users.db");
+const eventsDBPath = path.join(dataDir, "events.db");
+
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+if (!fs.existsSync(usersDBPath)) fs.writeFileSync(usersDBPath, "");
+if (!fs.existsSync(eventsDBPath)) fs.writeFileSync(eventsDBPath, "");
+
 const nedb = require('gray-nedb');
 class FamilyOrganiser {
 
@@ -21,7 +33,7 @@ class FamilyOrganiser {
 
             // Insert default event
              this.db.insert({
-                event: gym,
+                event: 'gym',
                 date: '2025-09-16',
                 startTime: '16:15',
                 endTime: '17:00',
