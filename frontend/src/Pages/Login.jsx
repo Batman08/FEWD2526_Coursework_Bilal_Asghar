@@ -1,33 +1,47 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AuthContext } from "../Providers/AuthProvider";
 
-const Register = () => {
+const Login = () => {
+    const { auth, setAuth } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [familyId, setFamilyId] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3002/register', {
+            const response = await fetch('http://localhost:3002/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, familyId, password, }),
+                body: JSON.stringify({ username, familyId, password }),
             });
 
             const data = await response.json();
             if (data.success) {
-                setMessage('Registration successful! You can now log in.');
+                setMessage('Login successful!');
                 setUsername('');
                 setFamilyId('');
                 setPassword('');
+
+                const user = {
+                    username: data.username,
+                    userrole: data.userrole,
+                    userfamily: data.userfamily,
+                    token: data.token,
+                };
+                setAuth(user); //updates context & localStorage
+                navigate("/events"); //redirect
             } else {
-                setMessage('Registration failed. Please try again.');
+                setMessage('Invalid username or password.');
             }
         } catch (error) {
-            console.error('Error registering user:', error);
+            console.error('Error logging in:', error);
             setMessage('An error occurred. Please try again later.');
         }
     };
@@ -47,12 +61,12 @@ const Register = () => {
 
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-10">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900">Create Your Account</h2>
-                    <p className="mt-2 text-gray-600 text-sm">Join and start organising events!</p>
-                    {message && <p className="mt-2 text-sm text-green-600">{message}</p>}
+                    <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
+                    <p className="mt-2 text-gray-600 text-sm">Log in to continue</p>
+                    {message && <p className="mt-2 text-sm text-teal-600">{message}</p>}
                 </div>
 
-                <form onSubmit={handleSubmit} method="post" className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="inputUsername" className="block text-sm font-semibold text-gray-700">Username</label>
                         <div className="mt-1 relative rounded-md shadow-sm">
@@ -107,16 +121,16 @@ const Register = () => {
                     </div>
 
                     <button type="submit" className="w-full flex justify-center items-center gap-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 shadow-md transition-colors duration-200 cursor-pointer">
-                        <FontAwesomeIcon icon={['fa', 'user-plus']} className="w-4 h-4" /> Register
+                        <FontAwesomeIcon icon={['fa', 'right-to-bracket']} className="w-4 h-4" /> Log In
                     </button>
                 </form>
 
                 <p className="mt-6 text-center text-sm text-gray-500">
-                    Already have an account? <a href="/login" className="font-semibold text-teal-500 hover:underline">Log in</a>
+                    Don't have an account? <a href="/register" className="font-semibold text-teal-500 hover:underline">Register</a>
                 </p>
             </div>
         </div>
     );
 };
 
-export default Register;
+export default Login;
