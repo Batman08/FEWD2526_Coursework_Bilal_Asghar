@@ -162,6 +162,7 @@ class userDAO {
 
 }
 
-const dao = new userDAO("./data/users.db");
+const dbFile = path.join(dataDir, "users.db");
+const dao = new userDAO(dbFile);
 dao.init();
 module.exports = dao;
