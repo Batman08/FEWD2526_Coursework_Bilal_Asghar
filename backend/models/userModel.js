@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 // ensure data dir and files exist
-const dir = path.join(__dirname, "../data");
+const dir = path.join(__dirname, "data");
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -162,7 +162,7 @@ class userDAO {
 
 }
 
-const dbFile = path.join(dir, "users.db");
-const dao = new userDAO(dbFile);
+// const dao = new userDAO("./data/users.db");
+const dao = new userDAO(path.join(__dirname, "users.db"));
 dao.init();
 module.exports = dao;
