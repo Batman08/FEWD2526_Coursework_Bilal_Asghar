@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from './Components/Navbar';
 import ProtectedRoute from './Components/ProtectedRoute';
 import Home from './Pages/Home';
+import Events from './Pages/Events';
+import AddEvent from './Pages/AddEvent';
 import Register from './Pages/Register';
 import Login from './Pages/Login';
 
@@ -13,7 +15,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     {<Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />}
-                    {/* <Route path="/add-event" element={<ProtectedRoute><AddEvent /></ProtectedRoute>} /> */}
+                    { <Route path="/events/add" element={<ProtectedRoute><AddEvent /></ProtectedRoute>} /> }
                     {/* <Route path="/edit-event/:id" element={<ProtectedRoute><EditEvent /></ProtectedRoute>} /> */}
                     <Route path="/register" element={<Register />} />
                     {<Route path="/login" element={<Login />} />}
