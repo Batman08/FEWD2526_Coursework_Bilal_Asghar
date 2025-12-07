@@ -6,6 +6,7 @@ require('./config/passport')(passport);
 require('dotenv').config()
 
 const app = express();
+const port = process.env.PORT || 3002;
 app.use(cors());
 const bodyParser = require('body-parser');
 
@@ -24,6 +25,6 @@ app.use(cookieParser())
 
 app.use('/', router);
 
-app.listen(3002, () => {
-    console.log('Server started on port 3002. Ctrl^c to quit.')
+app.listen(port, () => {
+    console.log(`Server started on port ${port}. Ctrl^c to quit.`)
 })
