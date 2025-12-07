@@ -127,8 +127,8 @@ exports.handle_login = (req, res) => {
 
 exports.show_edit_event = (req, res) => {
     const eventId = req.params.id;
-    const currentUser = req.user;
-    const currentUserFamily = req.family;
+    const currentUser = req.query.user;
+    const currentUserFamily = req.query.family;
     let familyMembers = [];
 
     userDAO.getAllUsersInFamily(currentUserFamily).then(
@@ -157,22 +157,21 @@ exports.show_edit_event = (req, res) => {
 // Update event
 exports.update_event = (req, res) => {
     const eventId = req.params.id;
-    const currentUser = req.user;
+    const currentUser = req.body.organiser;
 
-    userDAO.lookup(currentUser, req.family, (err, user) => {
+    userDAO.lookup(currentUser, req.body.userfamily, (err, user) => {
         if (err || !user) return res.status(403).send('Forbidden');
         db.getEventById(eventId).then((event) => {
             if (!event) {
                 res.status(404).send('Event not found');
                 return;
             }
-            if (event.organiser !== currentUser) {
+            if (event.organiser !== req.body.organiser) {
                 return res.status(403).send('Forbidden');
             }
 
             const updateData = {
                 event: req.body.event,
-                description: req.body.description,
                 requiredItems: req.body.requiredItems,
                 location: req.body.location,
                 date: req.body.date,
@@ -180,7 +179,6 @@ exports.update_event = (req, res) => {
                 startTime: req.body.startTime,
                 endTime: req.body.endTime,
                 eventType: req.body.eventType,
-                organiser: currentUser,
                 familyId: event.familyId,
                 participants: req.body.participants
 
@@ -190,7 +188,7 @@ exports.update_event = (req, res) => {
                     res.status(404).send('Event not found');
                     return;
                 }
-                res.redirect('/loggedIn');
+                res.status(200).json({ success: true });
             })
                 .catch((err) => {
                     console.log('Error updating event:', err);
@@ -235,115 +233,115 @@ exports.delete_event = (req, res) => {
                 })
         })
     })
- }
+}
 
-    // User Management Functions
-    exports.show_user_management = (req, res) => {
-        userDAO.getAllUsers().then((users) => {
-            familyUsers = users.filter(user => user.familyId === req.family);
-            res.render('userManagement', {
-                title: 'Manage Family Members',
-                users: familyUsers,
-                user: req.user
-            });
-        })
-            .catch((err) => {
-                console.log('Error fetching users:', err);
-                res.status(500).send('Error retrieving users');
-            });
+// User Management Functions
+exports.show_user_management = (req, res) => {
+    userDAO.getAllUsers().then((users) => {
+        familyUsers = users.filter(user => user.familyId === req.family);
+        res.render('userManagement', {
+            title: 'Manage Family Members',
+            users: familyUsers,
+            user: req.user
+        });
+    })
+        .catch((err) => {
+            console.log('Error fetching users:', err);
+            res.status(500).send('Error retrieving users');
+        });
+}
+
+exports.add_new_family_member = (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const role = req.body.role || 'member';
+    family = req.family || 'family_1'; // Default family if not provided
+
+    if (!username || !password) {
+        res.status(400).send('Username and password required');
+        return;
     }
 
-    exports.add_new_family_member = (req, res) => {
-        const username = req.body.username;
-        const password = req.body.password;
-        const role = req.body.role || 'member';
-        family = req.family || 'family_1'; // Default family if not provided
-
-        if (!username || !password) {
-            res.status(400).send('Username and password required');
+    userDAO.lookup(username, family, (err, existingUser) => {
+        if (existingUser && existingUser.familyId === family) {
+            res.status(400).send(`User ${username} already exists`);
             return;
         }
 
-        userDAO.lookup(username, family, (err, existingUser) => {
-            if (existingUser && existingUser.familyId === family) {
-                res.status(400).send(`User ${username} already exists`);
-                return;
-            }
+        userDAO.addUser(username, password, role, family)
+        res.redirect('/manage-users');
+    })
+}
 
-            userDAO.addUser(username, password, role, family)
-            res.redirect('/manage-users');
-        })
-    }
+exports.delete_user = (req, res) => {
+    const username = req.params.user;
 
-    exports.delete_user = (req, res) => {
-        const username = req.params.user;
-
-        userDAO.deleteUser(username).then((numDeleted) => {
-            if (numDeleted === 0) {
-                res.status(404).send('User not found');
-                return;
-            }
-            res.redirect('/manage-users');
-        })
-            .catch((err) => {
-                console.log('Error deleting user:', err);
-                res.status(500).send('Error deleting user');
-            });
-    }
-
-    // Show user details
-    exports.show_user_details = (req, res) => {
-        const username = req.params.user;
-        userDAO.lookup(username, req.family, (err, userDetails) => {
-            if (err || !userDetails) {
-                res.status(404).send('User not found');
-                return;
-            }
-            res.render('editUser', {
-                title: `User Details - ${username}`,
-                user: userDetails,
-            });
+    userDAO.deleteUser(username).then((numDeleted) => {
+        if (numDeleted === 0) {
+            res.status(404).send('User not found');
+            return;
+        }
+        res.redirect('/manage-users');
+    })
+        .catch((err) => {
+            console.log('Error deleting user:', err);
+            res.status(500).send('Error deleting user');
         });
+}
+
+// Show user details
+exports.show_user_details = (req, res) => {
+    const username = req.params.user;
+    userDAO.lookup(username, req.family, (err, userDetails) => {
+        if (err || !userDetails) {
+            res.status(404).send('User not found');
+            return;
+        }
+        res.render('editUser', {
+            title: `User Details - ${username}`,
+            user: userDetails,
+        });
+    });
+};
+
+exports.edit_user = (req, res) => {
+    const userIdForEdit = req.params.id;
+
+    const currentUser = req.user;
+    userDAO.getUserById(userIdForEdit, (err, user) => {
+        if (err || !currentUser) return res.status(403).send('Forbidden');
+        if (!user) {
+            res.status(404).send('User not found');
+            return;
+        }
+        res.render('editUser', {
+            title: 'Edit User',
+            user: user
+        });
+    })
+}
+
+exports.update_user = (req, res) => {
+    const userIdForEdit = req.params.id;
+    const family = req.family;
+
+    const updateData = {
+        user: req.body.username,
+        role: req.body.role,
+        familyId: family,
+        _id: userIdForEdit
     };
 
-    exports.edit_user = (req, res) => {
-        const userIdForEdit = req.params.id;
-
-        const currentUser = req.user;
-        userDAO.getUserById(userIdForEdit, (err, user) => {
-            if (err || !currentUser) return res.status(403).send('Forbidden');
-            if (!user) {
-                res.status(404).send('User not found');
-                return;
-            }
-            res.render('editUser', {
-                title: 'Edit User',
-                user: user
-            });
-        })
-    }
-
-    exports.update_user = (req, res) => {
-        const userIdForEdit = req.params.id;
-        const family = req.family;
-
-        const updateData = {
-            user: req.body.username,
-            role: req.body.role,
-            familyId: family,
-            _id: userIdForEdit
-        };
-
-        userDAO.updateUser(userIdForEdit, updateData).then((numUpdated) => {
-            if (numUpdated === 0) {
-                res.status(404).send('User not updated');
-                return;
-            }
-            res.redirect('/manage-users');
-        })
-            .catch((err) => {
-                console.log('Error updating user:', err);
-                res.status(500).send('Error updating event');
-            });
-    }
+    userDAO.updateUser(userIdForEdit, updateData).then((numUpdated) => {
+        if (numUpdated === 0) {
+            res.status(404).send('User not updated');
+            return;
+        }
+        res.redirect('/manage-users');
+    })
+        .catch((err) => {
+            console.log('Error updating user:', err);
+            res.status(500).send('Error updating event');
+        });
+}
 

@@ -16,7 +16,6 @@ export default function AddEvent() {
     // Load logged in user
     useEffect(() => {
         const stored = localStorage.getItem("user");
-
         if (!stored) {
             navigate("/login");
             return;
@@ -49,7 +48,10 @@ export default function AddEvent() {
         try {
             const response = await fetch("http://localhost:3002/new-event-entry", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": currentUser.token
+                 },
                 body: JSON.stringify(payload),
             });
 

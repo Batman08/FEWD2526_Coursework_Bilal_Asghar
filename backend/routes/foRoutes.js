@@ -7,11 +7,13 @@ const passport = require("passport");
 
 router.post("/register", controller.process_new_user);
 router.post("/login", controller.handle_login)
-router.get('/all-events', controller.json_events_endpoint);
-router.get('/all-users',controller.json_users_endpoint);
-router.post('/get-family-events', controller.family_events_endpoint);
-router.post('/new-event-entry', controller.post_new_event);
-router.post('/delete-event/:id', controller.delete_event);
+router.get('/all-events', passport.authenticate('jwt', { session: false }), controller.json_events_endpoint);
+router.get('/all-users', passport.authenticate('jwt', { session: false }), controller.json_users_endpoint);
+router.post('/get-family-events', passport.authenticate('jwt', { session: false }), controller.family_events_endpoint);
+router.post('/new-event-entry', passport.authenticate('jwt', { session: false }), controller.post_new_event);
+router.get('/event/:id', passport.authenticate('jwt', { session: false }), controller.show_edit_event);
+router.post('/update-event/:id', passport.authenticate('jwt', { session: false }), controller.update_event);
+router.post('/delete-event/:id', passport.authenticate('jwt', { session: false }), controller.delete_event);
 
 router.use((req, res) => {
     res.status(404);

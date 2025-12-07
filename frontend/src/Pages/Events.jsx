@@ -23,7 +23,10 @@ export default function EventsPage() {
         try {
             const res = await fetch(`http://localhost:3002/delete-event/${id}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${currentUser.token}`
+                },
                 body: JSON.stringify({
                     username: currentUser.username,
                     userfamily: currentUser.userfamily,
@@ -55,12 +58,14 @@ export default function EventsPage() {
             try {
                 const res = await fetch("http://localhost:3002/get-family-events", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": user.token
+                    },
                     body: JSON.stringify({ familyId: user.userfamily }),
                 });
 
                 const data = await res.json();
-                debugger
                 if (data != undefined && data != null) {
                     setEvents(data || []);
                     setLoading(false);
@@ -169,7 +174,7 @@ export default function EventsPage() {
                                             Delete
                                         </button>
 
-                                        <button type="button" onClick={() => navigate(`/edit-event/${ev._id}`)}
+                                        <button type="button" onClick={() => navigate(`/events/edit/${ev._id}`)}
                                             className="px-3 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium shadow-sm transition cursor-pointer">
                                             <i className="bi bi-pencil-square mr-1"></i>
                                             Edit
