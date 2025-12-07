@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Register = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const [username, setUsername] = useState('');
     const [familyId, setFamilyId] = useState('');
     const [password, setPassword] = useState('');
@@ -11,7 +13,7 @@ const Register = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3002/register', {
+            const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, familyId, password, }),

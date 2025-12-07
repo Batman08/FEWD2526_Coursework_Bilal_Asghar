@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthContext } from "../Providers/AuthProvider";
 
 const Login = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const { auth, setAuth } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [familyId, setFamilyId] = useState('');
@@ -16,7 +18,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3002/login', {
+            const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, familyId, password }),

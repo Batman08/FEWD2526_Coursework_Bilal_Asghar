@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AddEvent() {
+      const API_URL = import.meta.env.VITE_API_URL;
+
     const [eventName, setEventName] = useState("");
     const [date, setDate] = useState("");
     const [startTime, setStartTime] = useState("");
@@ -46,7 +48,7 @@ export default function AddEvent() {
         };
 
         try {
-            const response = await fetch("http://localhost:3002/new-event-entry", {
+            const response = await fetch(`${API_URL}/new-event-entry`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",

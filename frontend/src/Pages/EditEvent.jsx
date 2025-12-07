@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditEvent() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
 
   const [eventName, setEventName] = useState("");
@@ -32,7 +33,7 @@ export default function EditEvent() {
   useEffect(() => {
     if (!currentUser) return;
 
-    fetch(`http://localhost:3002/event/${id}?user=${currentUser.username}&family=${currentUser.userfamily}`,
+    fetch(`${API_URL}/event/${id}?user=${currentUser.username}&family=${currentUser.userfamily}`,
       {
         method: "GET",
         headers: {
@@ -80,7 +81,7 @@ export default function EditEvent() {
     };
 
     try {
-      const response = await fetch(`http://localhost:3002/update-event/${id}`, {
+      const response = await fetch(`${API_URL}/update-event/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

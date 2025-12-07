@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import EventCard from "../components/EventCard";
 
 export default function EventsPage() {
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +23,7 @@ export default function EventsPage() {
         if (!window.confirm("Are you sure you want to delete this event?")) return;
 
         try {
-            const res = await fetch(`http://localhost:3002/delete-event/${id}`, {
+            const res = await fetch(`${API_URL}/delete-event/${id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -57,7 +59,7 @@ export default function EventsPage() {
 
         const fetchEvents = async () => {
             try {
-                const res = await fetch("http://localhost:3002/get-family-events", {
+                const res = await fetch(`${API_URL}/get-family-events`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -176,7 +178,7 @@ export default function EventsPage() {
                                         </button>
 
                                         <button type="button" onClick={() => navigate(`/events/edit/${ev._id}`)}
-                                            className="px-3 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium shadow-sm transition cursor-pointer">
+                                            className="px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium shadow-sm transition cursor-pointer">
                                             <i className="bi bi-pencil-square mr-1"></i>
                                             Edit
                                         </button>
