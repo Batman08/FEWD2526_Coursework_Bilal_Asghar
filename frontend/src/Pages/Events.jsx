@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EventCard from "../components/EventCard";
+import EventCard from "../Components/EventCard";
 
 export default function EventsPage() {
     const API_URL = import.meta.env.VITE_API_URL;
