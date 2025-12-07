@@ -25,7 +25,7 @@ export default function EventsPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${currentUser.token}`
+                    "Authorization": `${currentUser.token}`
                 },
                 body: JSON.stringify({
                     username: currentUser.username,
@@ -35,13 +35,14 @@ export default function EventsPage() {
 
             const data = await res.json();
 
-            if (!data.success) {
+            if (data.success) {
+                // Remove event locally
+                setEvents((prev) => prev.filter((ev) => ev._id !== id));
+            }
+            else {
                 alert(data.message || "Could not delete event.");
                 return;
             }
-
-            // Remove event locally
-            setEvents((prev) => prev.filter((ev) => ev._id !== id));
         } catch (err) {
             console.error("Error deleting event:", err);
             alert("Could not delete event. Please try again later.");

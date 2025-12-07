@@ -212,22 +212,23 @@ exports.delete_event = (req, res) => {
         if (err || !user) return res.status(403).json({ 'message': 'Forbidden' });
         db.getEventById(eventId).then((event) => {
             if (!event) {
-                res.status(404).json({ 'message': 'Event not found' });
+                res.status(404).json({ success: false, 'message': 'Event not found' });
                 return;
             }
             if (event.organiser !== currentUser) {
-                return res.status(403).json({ 'message': 'Forbidden' });
+                return res.status(403).json({ success: false, 'message': 'Forbidden' });
             }
             db.deleteEvent(eventId).then((numDeleted) => {
                 if (numDeleted === 0) {
                     res.status(404).json({ 'message': 'Event not found' });
                     return;
                 }
-                res.status(202).json({ 'event deleted': numDeleted })
+                res.status(202).json({ success: true, 'event deleted': numDeleted })
             })
                 .catch((err) => {
                     console.log('Error deleting event:', err);
                     res.status(500).json({
+                        success: false,
                         'message': 'Error deleting event'
                     });
                 })
