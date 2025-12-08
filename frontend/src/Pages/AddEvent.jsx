@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function AddEvent() {
-      const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const [eventName, setEventName] = useState("");
     const [date, setDate] = useState("");
@@ -50,10 +51,10 @@ export default function AddEvent() {
         try {
             const response = await fetch(`${API_URL}/new-event-entry`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     "Authorization": currentUser.token
-                 },
+                },
                 body: JSON.stringify(payload),
             });
 
@@ -85,11 +86,16 @@ export default function AddEvent() {
         <div className="relative min-h-screen bg-gradient-to-br from-teal-50 to-purple-50 px-6 py-16 flex items-center justify-center">
             <div className="max-w-lg w-full bg-white shadow-xl rounded-2xl p-10">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center">
-                    Add New Event
+                    <FontAwesomeIcon icon={['fa', 'calendar-plus']} /> Add New Event
                 </h1>
 
                 {message && (
-                    <p className="text-center text-sm text-teal-600 mb-4">{message}</p>
+                    <div className={`mb-4 flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-medium
+                                    ${message.toLowerCase().includes("success") ? "bg-green-50 border-green-400 text-green-700" : "bg-red-50 border-red-400 text-red-700"
+                        }`}>
+                        <span className="text-xl">{message.toLowerCase().includes("success") ? <FontAwesomeIcon icon={['fa', 'tick']} /> : <FontAwesomeIcon icon={['fa', 'circle-exclamation']} />}</span>
+                        <p>{message}</p>
+                    </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -172,8 +178,8 @@ export default function AddEvent() {
                         />
                     </div>
 
-                    <button type="submit" className="w-full rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 shadow-md transition active:scale-95 cursor-pointer">
-                        Add Event
+                    <button type="submit" className="w-full rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2 shadow-md transition active:scale-95 cursor-pointer">
+                        <FontAwesomeIcon icon={['fa', 'plus']} /> Add Event
                     </button>
                 </form>
             </div>

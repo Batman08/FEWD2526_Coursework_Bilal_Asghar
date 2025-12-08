@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import EventCard from "../Components/EventCard";
 
 export default function EventsPage() {
@@ -9,6 +10,7 @@ export default function EventsPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentUser, setCurrentUser] = useState(null);
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
 
@@ -80,7 +82,7 @@ export default function EventsPage() {
                 }
             } catch (err) {
                 console.error("Error fetching events:", err);
-                setError("Could not load events. Is the backend running?");
+                setError("Could not load events. Please try again later.");
                 setLoading(false);
             }
         };
@@ -109,20 +111,14 @@ export default function EventsPage() {
         );
 
     // Error UI
-    // if (error)
-    //     return (
-    //         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-purple-50 p-6">
-    //             <div className="bg-white shadow-xl rounded-xl p-8 max-w-md text-center">
-    //                 <p className="text-red-500 font-semibold mb-4">{error}</p>
-    //                 <button
-    //                     onClick={() => navigate("/login")}
-    //                     className="px-5 py-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold shadow-md"
-    //                 >
-    //                     Go to Login
-    //                 </button>
-    //             </div>
-    //         </div>
-    //     );
+    if (error)
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-purple-50 p-6">
+                <div className="bg-white shadow-xl rounded-xl p-8 max-w-md text-center">
+                    <p className="text-red-500 font-semibold mb-4">{error}</p>
+                </div>
+            </div>
+        );
 
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-teal-50 to-purple-50 px-6 py-16">
@@ -143,10 +139,11 @@ export default function EventsPage() {
                 )}
 
                 {/* Add New Event Button */}
-                <button className="fixed bottom-6 right-6 bg-teal-500 hover:bg-teal-600 text-white rounded-full shadow-xl w-16 h-16 flex items-center justify-center text-3xl" onClick={() => navigate("/events/add")}>
-                    Add new event
-                </button>
-
+                <div className="text-end">
+                    <button className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-green-800 text-white font-medium shadow-sm transition mb-4 cursor-pointer" onClick={() => navigate("/events/add")}>
+                        <FontAwesomeIcon icon={['fa', 'calendar-plus']} /> Add new event
+                    </button>
+                </div>
 
                 {/* Search */}
                 <div className="mb-6">
@@ -173,14 +170,12 @@ export default function EventsPage() {
                                     <div className="flex gap-3 mt-3">
                                         <button type="button" onClick={() => handleDelete(ev._id)}
                                             className="px-3 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium shadow-sm transition cursor-pointer">
-                                            <i className="bi bi-trash mr-1"></i>
-                                            Delete
+                                            <FontAwesomeIcon icon={['fa', 'calendar-xmark']} /> Delete
                                         </button>
 
                                         <button type="button" onClick={() => navigate(`/events/edit/${ev._id}`)}
                                             className="px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium shadow-sm transition cursor-pointer">
-                                            <i className="bi bi-pencil-square mr-1"></i>
-                                            Edit
+                                            <FontAwesomeIcon icon={['fa', 'pen-to-square']} /> Edit
                                         </button>
                                     </div>
                                 )}
