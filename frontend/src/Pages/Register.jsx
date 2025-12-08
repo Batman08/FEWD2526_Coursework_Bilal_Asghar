@@ -8,9 +8,12 @@ const Register = () => {
     const [familyId, setFamilyId] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setLoading(true);
 
         try {
             const response = await fetch(`${API_URL}/register`, {
@@ -31,6 +34,8 @@ const Register = () => {
         } catch (error) {
             console.error('Error registering user:', error);
             setMessage('An error occurred. Please try again later.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -51,8 +56,16 @@ const Register = () => {
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-gray-900">Create Your Account</h2>
                     <p className="mt-2 text-gray-600 text-sm">Join and start organising events!</p>
-                    {message && <p className="mt-2 text-sm text-green-600">{message}</p>}
                 </div>
+
+                {message && (
+                    <div className={`mb-4 flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-medium
+                                    ${message.toLowerCase().includes("success") ? "bg-green-50 border-green-400 text-green-700" : "bg-red-50 border-red-400 text-red-700"
+                        }`}>
+                        <span className="text-xl">{message.toLowerCase().includes("success") ? <FontAwesomeIcon icon={['fa', 'tick']} /> : <FontAwesomeIcon icon={['fa', 'circle-exclamation']} />}</span>
+                        <p>{message}</p>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} method="post" className="space-y-6">
                     <div>
@@ -108,8 +121,8 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="w-full flex justify-center items-center gap-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 shadow-md transition-colors duration-200 cursor-pointer">
-                        <FontAwesomeIcon icon={['fa', 'user-plus']} className="w-4 h-4" /> Register
+                    <button type="submit" disabled={loading} className="w-full flex justify-center items-center gap-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold px-4 py-2 shadow-md transition active:scale-95 cursor-pointer">
+                        {loading ? (<FontAwesomeIcon icon={['fa', 'spinner']} className="w-4 h-4" spin />) : <FontAwesomeIcon icon={['fa', 'user-plus']} className="w-4 h-4" />} {loading ? "Registering..." : "Register"}
                     </button>
                 </form>
 

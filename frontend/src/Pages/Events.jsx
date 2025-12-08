@@ -105,8 +105,12 @@ export default function EventsPage() {
     // Loading UI
     if (loading)
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-purple-50">
-                <p className="text-lg text-gray-700">Loading events...</p>
+            <div className="relative min-h-screen bg-gradient-to-br from-teal-50 to-purple-50 px-6 py-16">
+                <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-10">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Family Events</h1>
+                    <p className="text-lg text-gray-700"><FontAwesomeIcon icon={['fa', 'spinner']} spin /> Loading events...</p>
+                    <p className="text-sm text-yellow-700 mt-2"><FontAwesomeIcon icon={['fa', 'circle-exclamation']} /> Note: This may take a little while if the backend service is warming up.</p>
+                </div>
             </div>
         );
 

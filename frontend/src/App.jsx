@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from './Components/Navbar';
+import { useContext } from "react";
+import { AuthContext } from './Providers/AuthProvider';
+import AnonNavbar from './Components/AnonNavbar';
+import AuthNavbar from './Components/AuthNavbar';
 import ProtectedRoute from './Components/ProtectedRoute';
 import Home from './Pages/Home';
 import Events from './Pages/Events';
@@ -9,10 +12,12 @@ import Register from './Pages/Register';
 import Login from './Pages/Login';
 
 const App = () => {
+    const { auth } = useContext(AuthContext);
+
     return (
         <div className="App font-sans min-h-screen">
             <BrowserRouter>
-                <Navbar />
+                {auth ? <AuthNavbar /> : <AnonNavbar />}
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />

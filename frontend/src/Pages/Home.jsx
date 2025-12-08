@@ -9,7 +9,7 @@ const Home = () => {
             <header className="bg-[#82A69C] text-white py-20 px-6 shadow-lg">
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-                        Family Organiser App
+                        Family Organiser
                     </h1>
                     <p className="mt-4 text-lg sm:text-xl text-green-50">
                         A calm and organised way to manage your family&apos;s schedule.
@@ -97,7 +97,7 @@ const Home = () => {
             <section className="py-16 bg-white border-t border-gray-200">
                 <div className="max-w-4xl mx-auto text-center px-6">
                     <h2 className="text-2xl font-bold text-gray-700">
-                        Start Organising with Calm & Clarity
+                        Start Organising with Clarity
                     </h2>
                     <p className="mt-3 text-gray-500">
                         Build a simple, structured routine for your family.
