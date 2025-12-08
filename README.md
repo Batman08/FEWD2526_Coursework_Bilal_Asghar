@@ -5,6 +5,12 @@ The goal of the system is to act as a **Family Organiser**, allowing users to re
 
 ---
 
+## Live Site
+
+https://stellular-druid-1007cb.netlify.app/
+
+---
+
 ## Main Features
 
 ### User Accounts
