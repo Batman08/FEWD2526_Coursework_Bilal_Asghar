@@ -2,11 +2,15 @@ export default async () => {
     const API_URL = process.env.VITE_API_URL;
 
     try {
-        const response = await fetch(`${API_URL}/backend-keep-alive`);
-        const data = await response.json();
+        const res = await fetch(`${API_URL}/backend-keep-alive`);
+        const data = await res.json();
 
-        return { statusCode: 200, body: JSON.stringify(data) };
+        console.log("Keepalive response:", data);
+
+        return new Response("OK", { status: 200 });
     } catch (err) {
-        return { statusCode: 500, body: "Failed to ping Render" };
+        console.error("Keepalive failed:", err);
+
+        return new Response("Failed", { status: 500 });
     }
 };
