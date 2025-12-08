@@ -10,5 +10,5 @@
   to = "/index.html"
   status = 200
 
-[[functions.keepalive]]
+[functions.keepalive]
   schedule = "* * * * *"
