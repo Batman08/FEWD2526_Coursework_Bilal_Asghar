@@ -9,6 +9,22 @@ The goal of the system is to act as a **Family Organiser**, allowing users to re
 
 https://stellular-druid-1007cb.netlify.app/
 
+Demo User 1:
+- **Username:** DemoUserOne
+- **Family Id:** family_1
+- **Password:** Password123*
+
+Demo User 2:
+- **Username:** DemoUserTwo
+- **Family Id:** family_1
+- **Password:** Password456*
+
+Demo User 3:
+- **Username:** DemoUserThree
+- **Family Id:** family_2
+- **Password:** Password789*
+
+
 ---
 
 ## Main Features
