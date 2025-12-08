@@ -16,32 +16,7 @@ router.post('/update-event/:id', passport.authenticate('jwt', { session: false }
 router.post('/delete-event/:id', passport.authenticate('jwt', { session: false }), controller.delete_event);
 
 //for hosted backend (Render) keep-alive ping
-router.get('/backend-keep-alive', async (req, res) => {
-    try {
-        const [events, users] = await Promise.all([
-            db.getAllEvents(),
-            userDAO.getAllUsers()
-        ]);
-
-        console.log("Keep-alive ping:", { eventCount: events.length, userCount: users.length });
-
-        const safeUsers = users.map(u => ({
-            username: u.username,
-            familyId: u.familyId,
-            role: u.role,
-            createdAt: u.createdAt,
-        }));
-
-        res.status(200).json({
-            alive: true,
-            events,
-            users: safeUsers
-        });
-    } catch (error) {
-        console.error("Keep-alive error:", error);
-        res.status(500).json({ alive: false, error: error.toString() });
-    }
-});
+router.get("/backend-keep-alive", controller.keep_alive);
 
 router.use((req, res) => {
     res.status(404);

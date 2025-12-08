@@ -207,30 +207,29 @@ exports.delete_event = (req, res) => {
     const eventId = req.params.id;
     const currentUser = req.body.username;
     const currentFamily = req.body.userfamily;
-    console.log(eventId)
+
     userDAO.lookup(currentUser, currentFamily, (err, user) => {
-        if (err || !user) return res.status(403).json({ 'message': 'Forbidden' });
+        if (err || !user) return res.status(403).json({  success: false, message: 'Forbidden' });
         db.getEventById(eventId).then((event) => {
             if (!event) {
-                res.status(404).json({ success: false, 'message': 'Event not found' });
+                res.status(404).json({ success: false, message: 'Event not found' });
                 return;
             }
             if (event.organiser !== currentUser) {
-                return res.status(403).json({ success: false, 'message': 'Forbidden' });
+                console.log(event.organiser);
+                console.log(currentUser);
+                return res.status(403).json({ success: false, message: 'Forbidden' });
             }
             db.deleteEvent(eventId).then((numDeleted) => {
                 if (numDeleted === 0) {
-                    res.status(404).json({ 'message': 'Event not found' });
+                    res.status(404).json({ message: 'Event not found' });
                     return;
                 }
                 res.status(202).json({ success: true, 'event deleted': numDeleted })
             })
                 .catch((err) => {
                     console.log('Error deleting event:', err);
-                    res.status(500).json({
-                        success: false,
-                        'message': 'Error deleting event'
-                    });
+                    res.status(500).json({success: false, message: 'Error deleting event'});
                 })
         })
     })
@@ -346,3 +345,29 @@ exports.update_user = (req, res) => {
         });
 }
 
+exports.keep_alive = async (req, res) => {
+    try {
+        const [events, users] = await Promise.all([
+            db.getAllEvents(),
+            userDAO.getAllUsers()
+        ]);
+
+        console.log("Keepalive ping:", {
+            events: events.length,
+            users: users.length
+        });
+
+        res.status(200).json({
+            alive: true,
+            events: events.length,
+            users: users.length
+        });
+
+    } catch (err) {
+        console.error("Keepalive error:", err);
+        res.status(500).json({
+            alive: false,
+            error: err.toString()
+        });
+    }
+};
