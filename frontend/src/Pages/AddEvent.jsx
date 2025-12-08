@@ -251,7 +251,7 @@ export default function AddEvent() {
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             placeholder="e.g. Local Leisure Centre"
-                            className="flex-1 px-4 py-2 outline-none"
+                            className="w-full px-4 py-2 outline-none"
                             required
                         />
                         <button type="button" onClick={() => handleVoiceClick("location")} className={`px-4 py-2 border-l border-gray-300 focus:outline-none cursor-pointer bg-gray-100 text-gray-700`}>
