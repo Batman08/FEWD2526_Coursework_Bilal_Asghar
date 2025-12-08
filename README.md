@@ -110,7 +110,7 @@ If the frontend fetches data from the backend successfully then the setup is com
 
 ---
 
-## 👤 Author
+## Author
 
 **Bilal Asghar**  
 **Student ID: S2132495**
@@ -121,14 +121,9 @@ If the frontend fetches data from the backend successfully then the setup is com
 
 This project includes extra features not explicitly required in the coursework brief:
 
-### 🗺 Google Maps Integration
+### Google Maps Integration
 - Each event now includes a “View on Map” button
 - The event’s location is automatically passed to Google Maps using a query param.
-
----
-
-### Logout Functionality
-- User can logout and clear authentication state.
 
 ---
 
